@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+    {% block contentCenter %}
+        <div class="MainContent col-10 p-3">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide m-3">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="10000">
+                        <a href=""><img src="{{ asset('/images/slide/ad_alcool.jpg') }}" class="d-block w-100" alt="ad 1"></a>
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2000">
+                        <img src="{{ asset('/images/slide/ad_bio.jpg') }}" class="d-block w-100" alt="ad 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('/images/slide/ad_offre.jpg') }}" class="d-block w-100" alt="ad 3">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+            <h2>Nouveauté</h2>
+
+            <div class="mx-2 d-flex row justify-content-around row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                {% for product in products %}
+                    <div class="card btn btn-primary" style="width: 18rem;">
+                        <a href="/product/Produit={{ product.id }}" class="link-dark text-decoration-none">
+                            <img src="{{ asset('/images/Product/') }}{{ product.image }}" class="card-img-top img-thumbnail" style="height:250px;" alt="{{ product.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <div class="btn btn-primary">{{ product.price }}€</div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock %}
