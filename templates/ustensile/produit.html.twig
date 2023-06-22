@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block contentCenter %}
+<div class="MainContent col-10 p-3">
+    <h2>{{ subcategory.name }}</h2>
+
+    <div class="mx-2 d-flex row justify-content-around row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+        {% for subcategoryproduit in subcategoryproduits %}
+            <div class="card btn btn-primary" style="width: 18rem;">
+                <a href="{{ path('app_produit', {id: subcategoryproduit.id}) }}" class="link-dark text-decoration-none">
+                    <img src="{{ asset('/images/Product/') }}{{ subcategoryproduit.image }}" class="card-img-top img-thumbnail" style="height:250px;" alt="{{ subcategoryproduit.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ subcategoryproduit.name }}</h5>
+                        <div class="btn btn-primary">{{ subcategoryproduit.price|number_format(2, ',', ' ') }} €</div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

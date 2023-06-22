@@ -2,67 +2,98 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Le LEABre Commerce{% endblock %}</title>
         {% block stylesheets %}
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-            <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+            <link rel="stylesheet" href="{{ asset('/css/main.css') }}" />
         {% endblock %}
     </head>
 
     <body>
-        <div class="bgImg">
         {% block Header %}<img class="banniere" src="{{ asset('/images/banniereLeabreCommerce.jpg') }}" alt="Banniere du LEABre Commerce" style="width: 1200px">{% endblock %}
-            {% block menu %}
-                <div class="MenuTop bg-body-secondary py-1 sticky-top mb-2">
-                    <ul class="MenuTopContent d-flex justify-content-around list-unstyled link-dark text-decoration-none">    
-                        <li class="MenuTopOnglet"><a href="{{ path('app_home') }}">Accueil</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_produitsFrais') }}">Produits Frais</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_surgeles') }}">Surgelés</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_epicerie') }}">Epicerie</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_boissons') }}">Boissons</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_entretient') }}">Entretient</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_mode') }}">Mode</a></li>
-                        <li class="MenuTopOnglet"><a href="{{ path('app_ustensile') }}">Ustensile</a></li>
-                    </ul>
-                </div>
-            {% endblock %}
+        {% block menu %}
+            <div class="MenuTop bg-body-secondary py-1 sticky-top mb-2">
+                <ul class="MenuTopContent d-flex justify-content-around list-unstyled">    
+                    <li class="MenuTopOnglet"><a href="{{ path('app_home') }}">Accueil</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_produitsFrais') }}">Produits Frais</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_surgeles') }}">Surgelés</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_epicerie') }}">Epicerie</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_boissons') }}">Boissons</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_entretient') }}">Entretient</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_mode') }}">Mode</a></li>
+                    <li class="MenuTopOnglet"><a href="{{ path('app_ustensile') }}">Ustensile</a></li>
+                    <li class="MenuTopOnglet">
+                        {% if app.user %}
+                            <p><strong>{{ app.user.username }}</strong>
+                            <a class="text-danger" href="{{ path('app_logout') }}">Déconnexion</a></p>
+                        {% else %}
+                            <a class="border-start" href="{{ path('app_login') }}">Connexion</a>
+                            <a class="" href="{{ path('app_register') }}">Inscription</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        {% endblock %}
 
-            {% block body %}
-                <div class="FullContent d-flex col-12">
+        {% include '_partials/_flash.html.twig' %}
 
-                    {% block contentCenter %}{% endblock %}
+        {% block body %}
+            <div class="FullContent d-flex col-12">
 
-                    {% block menuright %}
-                        <div class="col-2">
-                            <div class="MenuDroite bg-body-secondary ms-2">
-                                <div id="td_panier">
+                {% block contentCenter %}{% endblock %}
+
+                {% block menuright %}
+                    <div class="col-2">
+                        <div class="MenuDroite bg-body-secondary ms-2">
+                            <div id="td_panier">
+                                <form action="{{ path('app_order') }}">
                                     <div class="right-panier-title">
-                                        <img alt="" src="{{ asset('/images/icone/panier.png') }}" width="21" height="20"> Mon <strong>panier</strong>
+                                        <img alt="Panier" src="{{ asset('/images/icone/panier.png') }}" width="21" height="20"> Mon <strong>panier</strong>
                                     </div>
                                     <div class="bloc_panier " id="div_ligne_articles" style="padding: 0px; height: 344px;">
-                                        <ul aria-labelledby="lib_titre_panier"> 
+                                        <ul aria-labelledby="lib_titre_panier" style="padding-left: 0px;">
+                                            {% set total = 0 %}
+                                            {% for item in cart %}
+                                            {% set total = total + (item.product.price * item.quantity) %}
+                                                <div class="d-flex border">
+                                                    <div class="">
+                                                        <h4 class="h5">{{ item.product.name }}</h4>
+                                                        <p><strong>Qty:</strong> {{ item.quantity }}</p>
+                                                    </div>
+                                                    <div class="text-end ms-auto">
+                                                        <p class="fs-5 mb-2">{{ total|number_format(2, ',', ' ') }}€</p>
+                                                    </div>
+                                                    <div class="nav justify-content-end mt-n5 mt-sm-n3">
+                                                    <a class="nav-link fs-xl" href="{{ path('product_remove', {id: item.product.id}) }}" data-bs-toggle="tooltip" title="remove">
+                                                        <img alt="Poubelle" src="{{ asset('/images/icone/trash-icon.png') }}" width="20" height="20">
+                                                    </a>
+                                                </div>
+                                                </div>
+                                            {% endfor %}
                                         </ul>
                                     </div>
                                     <div class="bloc_panier">
-                                        <div class="footer-panier-left">Total achat :</div>
+                                        <div class="footer-panier-left">Total prix : {{ total|number_format(2, ',', ' ') }} €</div>
                                         <div class="footer-panier-right" id="total_achat"></div>
                                         <p class="fs-6">Minimum de commande 100€.</p>
                                         <div style="text-align: center; margin: 0 auto;">
-                                            <a href="#" style="font-size: 1.2rem; color: #AA023E; text-decoration: none; line-height: 2rem; display: block; clear: both;" rel="nofollow" class="hidden-xs">Voir tout mon Panier</a>
-                                            <a href="#" class="btn btn-danger" title="Passer commande">Commander</a>
+                                            <a href="{{ path('app_cart') }}" style="font-size: 1.2rem; color: #AA023E; text-decoration: none; line-height: 2rem; display: block; clear: both;" rel="nofollow" class="hidden-xs">Voir tout mon Panier</a>
+                                            <button class="btn btn-danger" type="submit" title="Passer commande">Commander</button>
                                         </div>
                                     </div>
-                                </div>
+                                </form>    
                             </div>
                         </div>
-                    {% endblock %}
+                    </div>
                 {% endblock %}
             </div>
-
+        {% endblock %}
+        
+        {% block footer %}
             <div class="footer bg-body-secondary mt-2 p-5">
                 <div class="row no-padding d-flex justify-content-around">
                     <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-entreprise">l'entreprise</div>
+                        <div class="accordion-nav footer-titre" id="footer-entreprise">L'entreprise</div>
                         <div class="footer_l1">
                             <ul aria-labelledby="footer-entreprise">
                                 <li><a href="#">Recrutement</a></li>
@@ -75,17 +106,17 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-livraison">livraisons</div>
+                        <div class="accordion-nav footer-titre" id="footer-livraison">Les Produits</div>
                         <div class="footer_l1">
                             <ul aria-labelledby="footer-livraison">
-                                <li><a href="#">Zones de livraison</a></li>
-                                <li><a href="#">Créneaux</a></li>
-                                <li><a href="#">Frais de livraison</a></li>
+                                {% for subcategorylist in subcategorylists %}
+                                    <li><a href="#">{{ subcategorylist.name }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-avantages">avantages</div>
+                        <div class="accordion-nav footer-titre" id="footer-avantages">Les avantages</div>
                         <div>
                             <ul aria-labelledby="footer-avantages">
                                 
@@ -97,73 +128,20 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-aide">aide</div>
+                        <div class="accordion-nav footer-titre" id="footer-aide">Information</div>
                         <div class="footer_l1">
                             <ul aria-labelledby="footer-aide">
-                                <li><a href="#">Plan du site</a></li>
-                                <li><a href="#">Foire aux questions</a></li>
-                                <li><a href="#" data-bs-toggle="modal" data-bs-target="#ContactModal">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="row no-padding d-flex justify-content-around">
-                    <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer_retrouv">retrouvez-nous sur</div>
-                        <div class="footer_l1">
-                            <div class="socials">
-                                <div><a href="#"></a></div>
-                                <div><a href="#"></a></div>
-                                <div><a href="#"></a></div>
-                            </div>
-                            <div>
-                                <ul aria-labelledby="footer_retrouv">
-                                    <li><a href="#">Le Blog</a></li>
-                                    <li><a href="#">Partageons nos idées !</a></li>
-                                    <li><a href="#">Avis clients</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-engage">engagements</div>
-                        <div>
-                            <ul aria-labelledby="footer-engage">
-                                <li><a href="#">Nos engagements</a></li>
-                                <li><a href="#">Notre démarche biologique</a></li>
-                                <li><a href="#">BON en goût, pour la santé, pour la planète</a></li>
-                                <li><a href="#">Notre charte fraîcheur</a></li>
-                                
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre" id="footer-services">Nos services</div>
-                        <div>
-                            <ul aria-labelledby="footer-services">
-                                <li><a href="#">Tous nos services</a></li>
-                                <li><a href="#">Suivi de livraison en temps réel</a></li>
-                                <li><a href="#">Moyens de paiement</a></li>
-                                <li><a href="#">Réservation de produits</a></li>
-                                <li><a href="#">Mes recettes en 1 clic</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-12 group">
-                        <div class="accordion-nav footer-titre">rappel produit</div>
-                        <div>
-                            <ul aria-labelledby="footer-rappel">
-                                <li><a href="#"><span>Retrait qualité Haagen Dazs</span></a></li>
-                                
-                                <li><a href="#"><span>Parmentier fleury michon</span></a></li>
-                                
-                                <li><a href="#"><span>tarte épinard chèvre et bouchées épinard ricotta Carte Nature </span></a></li>
+                                <li>1234 Saint Rue du Soleil</li>
+                                <li>Paris cedex 93118</li>
+                                <li>LeLEABreCommerce@gmail.com</li>
+                                <li>01 96 69 42 35</li>
+                                <li><a href="#" data-bs-toggle="modal" data-bs-target="#ContactModal">Contact nous</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endblock %}
     </body>
 
     {% block javascripts %}

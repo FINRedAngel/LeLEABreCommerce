@@ -34,11 +34,11 @@
             <div class="mx-2 d-flex row justify-content-around row-cols-2 row-cols-lg-5 g-2 g-lg-3">
                 {% for product in products %}
                     <div class="card btn btn-primary" style="width: 18rem;">
-                        <a href="/product/Produit={{ product.id }}" class="link-dark text-decoration-none">
+                        <a href="{{ path('app_produit', {id: product.id}) }}" class="link-dark text-decoration-none">
                             <img src="{{ asset('/images/Product/') }}{{ product.image }}" class="card-img-top img-thumbnail" style="height:250px;" alt="{{ product.name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ product.name }}</h5>
-                                <div class="btn btn-primary">{{ product.price }}€</div>
+                                <div class="btn btn-primary">{{ product.price|number_format(2, ',', ' ') }} €</div>
                             </div>
                         </a>
                     </div>

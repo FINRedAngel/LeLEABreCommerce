@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\SubCategory;
+use App\Entity\Transporter;
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -67,6 +69,18 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('Action', 'fas fa-bars')->setSubItems([
             MenuItem::linkToCrud('Crée SubCategory', 'fas fa-plus', SubCategory::class)->setAction(Crud::PAGE_NEW),
             MenuItem::linkToCrud('Voir SubCategory', 'fas fa-plus', SubCategory::class)
+        ]);
+
+        yield MenuItem::section('User');
+        yield MenuItem::subMenu('Action', 'fas fa-bars')->setSubItems([
+            MenuItem::linkToCrud('Crée User', 'fas fa-plus', User::class)->setAction(Crud::PAGE_NEW),
+            MenuItem::linkToCrud('Voir User', 'fas fa-plus', User::class)
+        ]);
+
+        yield MenuItem::section('Transporter');
+        yield MenuItem::subMenu('Action', 'fas fa-bars')->setSubItems([
+            MenuItem::linkToCrud('Crée Transporter', 'fas fa-plus', Transporter::class)->setAction(Crud::PAGE_NEW),
+            MenuItem::linkToCrud('Voir Transporter', 'fas fa-plus', Transporter::class)
         ]);
     }
 }

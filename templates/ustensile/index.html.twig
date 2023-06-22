@@ -3,5 +3,18 @@
 {% block contentCenter %}
 <div class="MainContent col-10 p-3">
     <h2>Ustensile</h2>
+
+    <div class="mx-2 d-flex row justify-content-around row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+        {% for subcategory in subcategorys %}
+            <div class="card btn btn-primary" style="width: 18rem;">
+                <a href="{{ path('app_produitsFraisProduit', {name: subcategory.name}) }}" class="link-dark text-decoration-none">
+                    <img src="{{ asset('/images/Subcategory/') }}{{ subcategory.image }}" class="card-img-top img-thumbnail" style="height:250px;" alt="{{ subcategory.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ subcategory.name}}</h5>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+    {% block contentCenter %}
+        <div class="MainContent col-10 p-3">
+            <h1>{{ product.name }}</h1>
+            <div class="d-flex row">
+                <div class="col"><img src="{{ asset('/images/Product/') }}{{ product.image }}" class="card-img-top img-thumbnail" style="height:500px; width:500px;" alt="{{ product.name }}"></div>
+                <div class="col">
+                    <p class="border-bottom border-black pb-5">{{ product.description }}</p>
+                    <div>
+                        <h3>{{ product.price|number_format(2, ',', ' ') }} €</h3>
+                        <p>Quantité disponible: {{ product.quantity }}</p>
+                        <div class="count-input ms-n3 row">
+                            <a href="{{ path('product_add', {id: product.id}) }}" class="btn btn-primary fs-xl" data-increment>Rajouter au panier</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
